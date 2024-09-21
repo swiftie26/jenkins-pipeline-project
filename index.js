@@ -1,15 +1,17 @@
-const http = require('http');
+const express = require('express');
+const path = require('path');
+const app = express();
 
-// Use '0.0.0.0' to allow external access
-const hostname = '0.0.0.0';
 const port = 3000;
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello, Jenkins Pipeline!\n');
+// Serve static files like profile.html and Ayesha's resume
+app.use(express.static(path.join(__dirname)));
+
+// Default route to serve the profile.html page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'profile.html'));
 });
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server running at http://localhost:${port}/`);
 });
