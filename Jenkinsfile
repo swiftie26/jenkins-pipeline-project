@@ -45,9 +45,13 @@ pipeline {
         stage('Release') {
             steps {
                 script {
-                    // Stop the running container (if any)
-                    sh '/usr/local/bin/docker stop my-node-app-container || true'
-                    sh '/usr/local/bin/docker rm my-node-app-container || true'
+                    // Stop and remove the running container if it exists
+                    sh '''
+                       if [ $(/usr/local/bin/docker ps -q -f name=my-node-app-container) ]; then
+                         /usr/local/bin/docker stop my-node-app-container
+                         /usr/local/bin/docker rm my-node-app-container
+                       fi
+                    '''
                     
                     // Start a new container in "production"
                     sh '/usr/local/bin/docker run -d -p 80:3000 --name my-node-app-container my-node-app'
