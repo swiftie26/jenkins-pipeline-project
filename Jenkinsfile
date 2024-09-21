@@ -47,9 +47,10 @@ pipeline {
                 script {
                     // Stop and remove the running container if it exists
                     sh '''
-                       if [ $(/usr/local/bin/docker ps -q -f name=my-node-app-container) ]; then
-                         /usr/local/bin/docker stop my-node-app-container
-                         /usr/local/bin/docker rm my-node-app-container
+                       CONTAINER_ID=$(docker ps -aq -f name=my-node-app-container)
+                       if [ "$CONTAINER_ID" ]; then
+                         docker stop $CONTAINER_ID || true
+                         docker rm $CONTAINER_ID || true
                        fi
                     '''
                     
