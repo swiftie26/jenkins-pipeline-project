@@ -37,7 +37,20 @@ pipeline {
                     sh '/usr/local/bin/docker build -t my-node-app .'
                     
                     // Run the Docker container
-                    sh '//usr/local/bin/docker run -d -p 3000:3000 --name my-node-app-container my-node-app'
+                    sh '/usr/local/bin/docker run -d -p 3000:3000 --name my-node-app-container my-node-app'
+                }
+            }
+        }
+
+        stage('Release') {
+            steps {
+                script {
+                    // Stop the running container (if any)
+                    sh '/usr/local/bin/docker stop my-node-app-container || true'
+                    sh '/usr/local/bin/docker rm my-node-app-container || true'
+                    
+                    // Start a new container in "production"
+                    sh '/usr/local/bin/docker run -d -p 80:3000 --name my-node-app-container my-node-app'
                 }
             }
         }
