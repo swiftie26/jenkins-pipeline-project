@@ -1,14 +1,15 @@
 pipeline {
     agent any
     
+    tools {
+        nodejs "NodeJS" // This is the name you gave to the NodeJS installation in Jenkins
+    }
+    
     stages {
         stage('Build') {
             steps {
-                // Install Node.js and dependencies
                 script {
-                    nodejs('NodeJS') {
-                        sh 'npm install'
-                    }
+                    sh 'npm install'
                 }
             }
         }
