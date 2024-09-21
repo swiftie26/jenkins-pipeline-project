@@ -21,5 +21,13 @@ pipeline {
                 }
             }
         }
+        
+        stage('Code Quality Analysis') {
+            steps {
+                script {
+                    sh 'npx eslint .'
+                }
+            }
+        }
     }
 }
