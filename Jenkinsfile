@@ -4,7 +4,7 @@ pipeline {
     tools {
         nodejs "NodeJS"
     }
-    
+
     stages {
         stage('Build') {
             steps {
@@ -26,6 +26,18 @@ pipeline {
             steps {
                 script {
                     sh 'npx eslint .'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    // Build the Docker image
+                    sh 'docker build -t my-node-app .'
+                    
+                    // Run the Docker container
+                    sh 'docker run -d -p 3000:3000 --name my-node-app-container my-node-app'
                 }
             }
         }
