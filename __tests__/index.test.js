@@ -1,22 +1,21 @@
 const request = require('supertest');
-const http = require('http');
+const express = require('express');
+const path = require('path');
 
-// Use '0.0.0.0' to listen on all interfaces
-const hostname = '0.0.0.0';
-const port = 3000;
+const app = express();
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello, Jenkins Pipeline!\n');
+// Serve static files (like profile.html)
+app.use(express.static(path.join(__dirname)));
+
+// Serve the profile.html file at the root URL
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'profile.html'));
 });
 
 describe('GET /', () => {
-  it('should return Hello, Jenkins Pipeline!', async () => {
-    server.listen(port, hostname);
-    const res = await request(`http://127.0.0.1:${port}`).get('/');
+  it('should return the profile.html page', async () => {
+    const res = await request(app).get('/');
     expect(res.statusCode).toBe(200);
-    expect(res.text).toBe('Hello, Jenkins Pipeline!\n');
-    server.close();
+    expect(res.text).toContain('<title>Ayesha Rana - Profile</title>'); // Check if the profile page is served
   });
 });
