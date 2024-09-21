@@ -4,12 +4,12 @@ const path = require('path');
 
 const app = express();
 
-// Serve static files (like profile.html)
-app.use(express.static(path.join(__dirname)));
+// Adjust the path to serve static files from the root directory during tests
+app.use(express.static(path.join(__dirname, '../')));
 
 // Serve the profile.html file at the root URL
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'profile.html'));
+  res.sendFile(path.join(__dirname, '../profile.html'));
 });
 
 describe('GET /', () => {
