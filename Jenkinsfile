@@ -33,6 +33,15 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+                    // Stop and remove the running container if it exists
+                    sh '''
+                       CONTAINER_ID=$(docker ps -aq -f name=my-node-app-container)
+                       if [ "$CONTAINER_ID" ]; then
+                         docker stop $CONTAINER_ID || true
+                         docker rm $CONTAINER_ID || true
+                       fi
+                    '''
+                    
                     // Build the Docker image
                     sh '/usr/local/bin/docker build -t my-node-app .'
                     
