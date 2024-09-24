@@ -9,7 +9,11 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    // Install dependencies
                     sh 'npm install'
+                    
+                    // Build the Docker image as an artifact
+                    sh '/usr/local/bin/docker build -t my-node-app .'
                 }
             }
         }
@@ -17,6 +21,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
+                    // Run tests with Jest
                     sh 'npm test'
                 }
             }
@@ -25,6 +30,7 @@ pipeline {
         stage('Code Quality Analysis') {
             steps {
                 script {
+                    // Run ESLint to check code quality
                     sh 'npx eslint .'
                 }
             }
@@ -42,10 +48,7 @@ pipeline {
                        fi
                     '''
                     
-                    // Build the Docker image
-                    sh '/usr/local/bin/docker build -t my-node-app .'
-                    
-                    // Run the Docker container
+                    // Run the Docker container for testing on port 3000
                     sh '/usr/local/bin/docker run -d -p 3000:3000 --name my-node-app-container my-node-app'
                 }
             }
@@ -63,7 +66,7 @@ pipeline {
                        fi
                     '''
                     
-                    // Start a new container in "production"
+                    // Start a new container in "production" on port 80
                     sh '/usr/local/bin/docker run -d -p 80:3000 --name my-node-app-container my-node-app'
                 }
             }
